@@ -5,18 +5,22 @@ import config from "../../config";
 import { IDocumentData } from "./interface";
 import { Logger } from "winston";
 import LoggerInstance from "../../loaders/logger";
+import { ThermalPrinter } from "node-thermal-printer";
+import PrinterInstance from "../../loaders/printer";
 
 export default class ReceiptService {
     private logger: Logger
     private axios: AxiosInstance
     private bsaleBaseUrl: string
     private bsaleAccessToken: string
+    private printer: ThermalPrinter
 
     constructor() {
         this.logger = LoggerInstance
         this.axios = axios
         this.bsaleBaseUrl = config.bsale.baseUrl
         this.bsaleAccessToken = config.bsale.accessToken
+        this.printer = PrinterInstance
     }
 
     async downloadPdf(resourceId: string) {
@@ -43,10 +47,31 @@ export default class ReceiptService {
             const fileName = splitPdfUrl[splitPdfUrl.length - 1]
             const fileData = Buffer.from(pdfResponse.data, 'binary')
             await fs.writeFile(path.join(__dirname, `../../../documents/receipts/${fileName}`), fileData)
-            console.log(`File saved`)
+            this.logger.debug('File saved')
             return true
         } catch (error) {
             this.logger.error(error)
+            return false
+        }
+    }
+
+    async printSampleReceipt() {
+        try {
+            const isConnected = await this.printer.isPrinterConnected()
+            if (!isConnected) {
+                this.logger.error('Printer is not connected')
+                return false
+            }
+
+            this.printer.alignCenter()
+            this.printer.println("Hello pals!")
+            this.printer.cut()
+
+            await this.printer.execute()
+            this.logger.debug('Print done!')
+            return true
+        } catch (error) {
+            this.logger.error('Printing failed')
             return false
         }
     }

@@ -4,7 +4,7 @@ import config from './config'
 
 import express from 'express'
 
-import Logger from './loaders/logger'
+import LoggerInstance from './loaders/logger'
 
 async function startServer() {
     const { port, debugNamespace } = config
@@ -38,13 +38,13 @@ async function startServer() {
         // handle specific listen errors with friendly messages
         switch (error.code) {
             case "EACCES":
-                Logger.error(bind + " requires elevated privileges")
+                LoggerInstance.error(bind + " requires elevated privileges")
                 process.exit(1)
             case "EADDRINUSE":
-                Logger.error(bind + " is already in use")
+                LoggerInstance.error(bind + " is already in use")
                 process.exit(1)
             default:
-                Logger.error(error)
+                LoggerInstance.error(error)
         }
     }
 
@@ -61,7 +61,7 @@ async function startServer() {
 
         if (process.env.NODE_ENV === 'development') {
             require('debug')(debugNamespace)(`Listening on ${address}`)
-            Logger.info(`Server listening on port: ${port}`)
+            LoggerInstance.info(`Server listening on port: ${port}`)
         }
     }
 }

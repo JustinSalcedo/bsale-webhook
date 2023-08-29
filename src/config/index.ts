@@ -23,5 +23,8 @@ export default {
     bsale: {
         baseUrl: process.env.BSALE_BASE_URL || '',
         accessToken: process.env.BSALE_ACCESS_TOKEN || ''
+    },
+    printer: {
+        interface: process.env.PRINTER_INTERFACE || '\\.\COM1'
     }
 }
