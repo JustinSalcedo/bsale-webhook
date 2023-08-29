@@ -22,6 +22,22 @@ export default function (app: Router) {
     )
 
     route.post(
+        '/print',
+        async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const { text }: { text: string | undefined } = req.body
+                if (!text) return next(new Error('Cannot print blank text'))
+                const serviceInstance = new ReceiptService()
+                const wasPrinted = await serviceInstance.printCustomText(text)
+                if (!wasPrinted) return next(new Error('Could not print custom text'))
+                return res.status(200).end()
+            } catch (error) {
+                return next(error)
+            }
+        }
+    )
+
+    route.post(
         '',
         async (req: Request, res: Response, next: NextFunction) => {
             try {

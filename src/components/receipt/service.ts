@@ -75,4 +75,24 @@ export default class ReceiptService {
             return false
         }
     }
+
+    async printCustomText(text: string) {
+        try {
+            const isConnected = await this.printer.isPrinterConnected()
+            if (!isConnected) {
+                this.logger.error('Printer is not connected')
+                return false
+            }
+
+            this.printer.print(text)
+            this.printer.cut()
+
+            await this.printer.execute()
+            this.logger.debug(`Printed: "${text}"`)
+            return true
+        } catch (error) {
+            this.logger.error('Printing failed')
+            return false
+        }
+    }
 }
