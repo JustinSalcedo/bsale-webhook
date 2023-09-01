@@ -5,22 +5,20 @@ import config from "../../config";
 import { IDocumentData } from "./interface";
 import { Logger } from "winston";
 import LoggerInstance from "../../loaders/logger";
-import { ThermalPrinter } from "node-thermal-printer";
-import PrinterInstance from "../../loaders/printer";
 
 export default class ReceiptService {
     private logger: Logger
     private axios: AxiosInstance
     private bsaleBaseUrl: string
     private bsaleAccessToken: string
-    private printer: ThermalPrinter
+    // private printer: ThermalPrinter
 
     constructor() {
         this.logger = LoggerInstance
         this.axios = axios
         this.bsaleBaseUrl = config.bsale.baseUrl
         this.bsaleAccessToken = config.bsale.accessToken
-        this.printer = PrinterInstance
+        // this.printer = PrinterInstance
     }
 
     async downloadPdf(resourceId: string) {
@@ -55,44 +53,44 @@ export default class ReceiptService {
         }
     }
 
-    async printSampleReceipt() {
-        try {
-            const isConnected = await this.printer.isPrinterConnected()
-            if (!isConnected) {
-                this.logger.error('Printer is not connected')
-                return false
-            }
+    // async printSampleReceipt() {
+    //     try {
+    //         const isConnected = await this.printer.isPrinterConnected()
+    //         if (!isConnected) {
+    //             this.logger.error('Printer is not connected')
+    //             return false
+    //         }
 
-            this.printer.alignCenter()
-            this.printer.println("Hello pals!")
-            this.printer.cut()
+    //         this.printer.alignCenter()
+    //         this.printer.println("Hello pals!")
+    //         this.printer.cut()
 
-            await this.printer.execute()
-            this.logger.debug('Print done!')
-            return true
-        } catch (error) {
-            this.logger.error('Printing failed')
-            return false
-        }
-    }
+    //         await this.printer.execute()
+    //         this.logger.debug('Print done!')
+    //         return true
+    //     } catch (error) {
+    //         this.logger.error('Printing failed')
+    //         return false
+    //     }
+    // }
 
-    async printCustomText(text: string) {
-        try {
-            const isConnected = await this.printer.isPrinterConnected()
-            if (!isConnected) {
-                this.logger.error('Printer is not connected')
-                return false
-            }
+    // async printCustomText(text: string) {
+    //     try {
+    //         const isConnected = await this.printer.isPrinterConnected()
+    //         if (!isConnected) {
+    //             this.logger.error('Printer is not connected')
+    //             return false
+    //         }
 
-            this.printer.print(text)
-            this.printer.cut()
+    //         this.printer.print(text)
+    //         this.printer.cut()
 
-            await this.printer.execute()
-            this.logger.debug(`Printed: "${text}"`)
-            return true
-        } catch (error) {
-            this.logger.error('Printing failed')
-            return false
-        }
-    }
+    //         await this.printer.execute()
+    //         this.logger.debug(`Printed: "${text}"`)
+    //         return true
+    //     } catch (error) {
+    //         this.logger.error('Printing failed')
+    //         return false
+    //     }
+    // }
 }

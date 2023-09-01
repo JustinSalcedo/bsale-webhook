@@ -25,6 +25,7 @@ export default {
         accessToken: process.env.BSALE_ACCESS_TOKEN || ''
     },
     printer: {
-        interface: process.env.PRINTER_INTERFACE || '\\.\COM1'
+        // interface: process.env.PRINTER_INTERFACE || '\\.\COM1'
+        name: process.env.PRINTER_NAME || ''
     }
 }

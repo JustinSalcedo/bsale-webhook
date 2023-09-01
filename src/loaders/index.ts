@@ -1,15 +1,26 @@
 import { Express } from 'express'
 import expressLoader from './express'
 import LoggerInstance from './logger'
-import PrinterInstance from './printer'
+import ptp from 'pdf-to-printer'
 
 export default function ({ expressApp }: { expressApp: Express }) {
     // Check initial printer connection
-    PrinterInstance.isPrinterConnected()
-        .then(isConnected => isConnected
-            ? LoggerInstance.info('Printer is connected')
-            : LoggerInstance.warn('Printer is not connected')
-        )
+    // ptp.getDefaultPrinter().then(defaultPrinter => {
+    //     if (defaultPrinter) {
+    //         const { deviceId, name, paperSizes } = defaultPrinter
+    //         LoggerInstance.info(`
+    //             Default printer
+    //             \n- Device ID: ${deviceId}
+    //             \n- Name: ${name}
+    //             \n- Paper sizes: ${paperSizes}
+    //         `)
+    //     }
+    //     else LoggerInstance.warn('No default printer found')
+    // })
+    // ptp.getPrinters().then(printers => {
+    //     if (printers) LoggerInstance.info(printers)
+    // })
+    LoggerInstance.debug(ptp)
 
     // Load express routes
     expressLoader({ app: expressApp })
