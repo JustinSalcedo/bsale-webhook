@@ -37,20 +37,20 @@ export default function (app: Router) {
     //     }
     // )
 
-    // route.post(
-    //     '',
-    //     async (req: Request, res: Response, next: NextFunction) => {
-    //         try {
-    //             const { resourceId, topic } = req.body as IReceiptWebhookPayload
-    //             if (!(resourceId && topic)) return res.status(400).json({ error: "Missing resourceId or topic" })
-    //             if (topic !== 'document') return res.status(400).json({ error: "Invalid topic (resource must be a document)" })
-    //             const serviceInstance = new ReceiptService()
-    //             const wasDownloaded = await serviceInstance.downloadPdf(resourceId)
-    //             if (!wasDownloaded) return next(new Error('Could not download receipt'))
-    //             return res.status(200).end()
-    //         } catch (error) {
-    //             return next(error)
-    //         }
-    //     }
-    // )
+    route.post(
+        '',
+        async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                const { resourceId, topic } = req.body as IReceiptWebhookPayload
+                if (!(resourceId && topic)) return res.status(400).json({ error: "Missing resourceId or topic" })
+                if (topic !== 'document') return res.status(400).json({ error: "Invalid topic (resource must be a document)" })
+                const serviceInstance = new ReceiptService()
+                const wasPrinted = await serviceInstance.printReceipt(resourceId)
+                if (!wasPrinted) return next(new Error('Could not print receipt'))
+                return res.status(200).end()
+            } catch (error) {
+                return next(error)
+            }
+        }
+    )
 }
