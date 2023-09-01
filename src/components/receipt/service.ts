@@ -29,6 +29,11 @@ export default class ReceiptService {
             const pdfFileName = await this.downloadPdf(resourceId)
             const pdfFilePath = path.join(__dirname, `../../../documents/receipts/${pdfFileName}`)
             const wasPrinted = await this.printer.printPDF(pdfFilePath)
+            if (wasPrinted) {
+                this.logger.info('Receipt printed!')
+                this.deleteFile(pdfFilePath)
+            }
+            else this.logger.error('Could not print receipt')
             return wasPrinted
         } catch (error) {
             this.logger.error(error)
@@ -60,11 +65,19 @@ export default class ReceiptService {
             const fileName = splitPdfUrl[splitPdfUrl.length - 1]
             const fileData = Buffer.from(pdfResponse.data, 'binary')
             await fs.writeFile(path.join(__dirname, `../../../documents/receipts/${fileName}`), fileData)
-            this.logger.debug('File saved')
+            this.logger.info('File saved')
             return fileName
         } catch (error) {
             this.logger.error(error)
             return null
+        }
+    }
+
+    private async deleteFile(filePath: string) {
+        try {
+            await fs.unlink(filePath)
+        } catch (error) {
+            this.logger.error(error)
         }
     }
 

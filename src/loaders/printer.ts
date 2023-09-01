@@ -21,7 +21,7 @@ export class PrinterHandler {
     public async logAllPrintersDetails() {
         try {
             const printers = await getPrinters()
-            printers.map(this.logPrinterDetails)
+            printers.map((printer) => this.logPrinterDetails(printer))
         } catch (error) {
             this.logger.error(error)
         }
@@ -40,7 +40,6 @@ export class PrinterHandler {
     public async checkOSCompatibility() {
         try {
             await getDefaultPrinter()
-            this.logger.debug('this is wrong')
             return true
         } catch (error) {
             return false
