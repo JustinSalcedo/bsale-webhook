@@ -1,6 +1,6 @@
 import { Logger } from "winston";
 import LoggerInstance from "./logger";
-import { Printer, getDefaultPrinter, getPrinters, print } from "pdf-to-printer";
+import { Printer, getDefaultPrinter, getPrinters, print, PrintOptions } from "pdf-to-printer";
 import config from "../config";
 
 export class PrinterHandler {
@@ -29,7 +29,7 @@ export class PrinterHandler {
 
     public async printPDF(pdfFilePath: string) {
         try {
-            await print(pdfFilePath, { printer: config.printer.name })
+            await print(pdfFilePath, { printer: config.printer.name, paperSize: "Roll Paper 58 x 297 mm" })
             return true
         } catch (error) {
             this.logger.error(error)
