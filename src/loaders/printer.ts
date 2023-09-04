@@ -1,11 +1,10 @@
 import { Logger } from "winston";
 import LoggerInstance from "./logger";
 import { Printer, getDefaultPrinter, getPrinters, print, PrintOptions } from "pdf-to-printer";
-//@ts-ignore
-import pdfPoppler from 'pdf-poppler'
-
+import { fromPath } from "pdf2pic";
 import config from "../config";
 import path from "path";
+import { Options } from "pdf2pic/dist/types/options";
 
 export class PrinterHandler {
     private logger: Logger
@@ -45,13 +44,14 @@ export class PrinterHandler {
         try {
             // convert PDF to JPG
             const imageFileDir = path.join(__dirname, `../../../documents/receipts`)
-            const opts = {
-                format: 'jpeg',
-                out_dir: imageFileDir,
-                out_prefix: 'receipt',
-                page: null
+            const options: Options = {
+                density: 100,
+                saveFilename: Date.now().toString(),
+                savePath: imageFileDir,
+                format: "jpg"
             }
-            await pdfPoppler.conver(pdfFilePath, opts)
+            const convert = fromPath(pdfFilePath, options)
+            await convert(1, { responseType: "image" })
             return true
 
             // print JPG
