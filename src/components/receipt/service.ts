@@ -28,7 +28,8 @@ export default class ReceiptService {
             if (!isOSCompatible) throw new Error("Printer handler doesn't support this OS")
             const pdfFileName = await this.downloadPdf(resourceId)
             const pdfFilePath = path.join(__dirname, `../../../documents/receipts/${pdfFileName}`)
-            const wasPrinted = await this.printer.printPDF(pdfFilePath)
+            // const wasPrinted = await this.printer.printPDF(pdfFilePath)
+            const wasPrinted = await this.printer.printPDFAsImage(pdfFilePath)
             if (wasPrinted) {
                 this.logger.info('Receipt printed!')
                 this.deleteFile(pdfFilePath)
