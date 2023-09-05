@@ -62,7 +62,7 @@ export default class ReceiptService {
             }
             const pdfResponse = await this.axios(pdfRequestConfig)
             const splitPdfUrl = urlPdf.split('/')
-            const fileName = splitPdfUrl[splitPdfUrl.length - 1]
+            const fileName = splitPdfUrl[splitPdfUrl.length - 1].split('?')[0]
             const fileData = Buffer.from(pdfResponse.data, 'binary')
             await fs.writeFile(path.join(__dirname, `../../../documents/receipts/${fileName}`), fileData)
             this.logger.info('File saved')
