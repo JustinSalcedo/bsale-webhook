@@ -28,8 +28,7 @@ export default class ReceiptService {
             if (!isOSCompatible) throw new Error("Printer handler doesn't support this OS")
             const pdfFileName = await this.downloadPdf(resourceId)
             const pdfFilePath = path.join(__dirname, `../../../documents/receipts/${pdfFileName}`)
-            // const wasPrinted = await this.printer.printPDF(pdfFilePath)
-            const wasPrinted = await this.printer.printPDFAsImage(pdfFilePath)
+            const wasPrinted = await this.printer.printPDF(pdfFilePath)
             if (wasPrinted) {
                 this.logger.info('Receipt printed!')
                 this.deleteFile(pdfFilePath)
@@ -54,15 +53,15 @@ export default class ReceiptService {
             }
 
             const response = await this.axios(requestConfig)
-            const { urlPdfOriginal } = response.data as IDocumentData
+            const { urlPdf } = response.data as IDocumentData
 
             const pdfRequestConfig: AxiosRequestConfig = {
-                url: urlPdfOriginal,
+                url: urlPdf,
                 method: 'GET',
                 responseType: "arraybuffer"
             }
             const pdfResponse = await this.axios(pdfRequestConfig)
-            const splitPdfUrl = urlPdfOriginal.split('/')
+            const splitPdfUrl = urlPdf.split('/')
             const fileName = splitPdfUrl[splitPdfUrl.length - 1]
             const fileData = Buffer.from(pdfResponse.data, 'binary')
             await fs.writeFile(path.join(__dirname, `../../../documents/receipts/${fileName}`), fileData)

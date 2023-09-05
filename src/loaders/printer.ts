@@ -32,7 +32,7 @@ export class PrinterHandler {
 
     public async printPDF(pdfFilePath: string) {
         try {
-            await print(pdfFilePath, { printer: config.printer.name, paperSize: "Roll Paper 58 x 297 mm" })
+            await print(pdfFilePath, { printer: config.printer.name, paperSize: "Roll Paper 80 x 297 mm", scale: "fit", pages: "1" })
             return true
         } catch (error) {
             this.logger.error(error)
