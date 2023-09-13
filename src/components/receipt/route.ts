@@ -45,8 +45,8 @@ export default function (app: Router) {
                 if (!(resourceId && topic)) return res.status(400).json({ error: "Missing resourceId or topic" })
                 if (topic !== 'document') return res.status(400).json({ error: "Invalid topic (resource must be a document)" })
                 const serviceInstance = new ReceiptService()
-                const wasPrinted = await serviceInstance.printReceipt(resourceId)
-                if (!wasPrinted) return next(new Error('Could not print receipt'))
+                const wasSentForPrinting = await serviceInstance.printReceipt(resourceId)
+                if (!wasSentForPrinting) return next(new Error('Could not send receipt for printing'))
                 return res.status(200).end()
             } catch (error) {
                 return next(error)
